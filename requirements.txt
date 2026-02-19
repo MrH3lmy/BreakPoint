@@ -1,0 +1,10 @@
+pytest
+flake8
+rich
+pydantic
+PyYAML
+SQLAlchemy
+scapy
+manuf
+matplotlib
+networkx

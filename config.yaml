@@ -1,0 +1,11 @@
+interface: wlan0mon
+paths:
+  captures_dir: captures
+  logs_file: breakpoint.log
+  db_file: breakpoint.db
+  session_file: .breakpoint_session.json
+  reports_dir: reports
+defaults:
+  scan_timeout: 10
+  capture_seconds: 25
+  deauth_count: 16

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import handshake_cracking as hc
+import process_utils as pu
 
 
 class DummyPopen:
@@ -28,7 +29,7 @@ def test_verify_handshake_with_aircrack(monkeypatch: object, tmp_path: Path) -> 
         stdout = "[00:00:12] 1 handshake"
         stderr = ""
 
-    monkeypatch.setattr(hc.subprocess, "run", lambda *args, **kwargs: Result())
+    monkeypatch.setattr(pu.subprocess, "run", lambda *args, **kwargs: Result())
 
     assert hc.verify_handshake(str(cap), bssid="AA:BB:CC:DD:EE:FF") is True
 
@@ -41,7 +42,7 @@ def test_crack_wpa_password_reads_output_file(monkeypatch: object, tmp_path: Pat
 
     monkeypatch.setattr(hc.shutil, "which", lambda _tool: "/usr/bin/aircrack-ng")
 
-    def fake_run(cmd, check, capture_output, text):
+    def fake_run(cmd, check, capture_output, text, timeout=None):
         out_index = cmd.index("-l") + 1
         Path(cmd[out_index]).write_text("supersecret\n")
 
@@ -52,7 +53,7 @@ def test_crack_wpa_password_reads_output_file(monkeypatch: object, tmp_path: Pat
 
         return Result()
 
-    monkeypatch.setattr(hc.subprocess, "run", fake_run)
+    monkeypatch.setattr(pu.subprocess, "run", fake_run)
 
     assert hc.crack_wpa_password(str(cap), str(wordlist)) == "supersecret"
 
@@ -69,7 +70,7 @@ def test_capture_handshake_returns_cap(monkeypatch: object, tmp_path: Path) -> N
         stdout = ""
         stderr = ""
 
-    monkeypatch.setattr(hc.subprocess, "run", lambda *args, **kwargs: Result())
+    monkeypatch.setattr(pu.subprocess, "run", lambda *args, **kwargs: Result())
 
     expected_cap = tmp_path / "capture-01.cap"
 
